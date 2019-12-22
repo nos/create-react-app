@@ -59,6 +59,12 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+// our packages that will now be included in the CRA build step
+const appIncludes = [
+  paths.appSrc,
+  paths.resolveApp('../components/src'),
+]
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
@@ -381,7 +387,7 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('eslint-loader'),
             },
           ],
-          include: paths.appSrc,
+          include: appIncludes,
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -403,7 +409,7 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: appIncludes,
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
