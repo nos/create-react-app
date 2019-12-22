@@ -60,9 +60,17 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
-const pgks = spawn.sync('yarn', ['workspaces', 'info', '--json']);
-const output = JSON.parse(pgks.output[1].toString());
-const packages = JSON.parse(output.data);
+let includedSources;
+if (root) {
+  const pgks = spawn.sync('yarn', ['workspaces', 'info', '--json']);
+  const output = JSON.parse(pgks.output[1].toString());
+  const packages = JSON.parse(output.data);
+  includedSources = Object.keys(packages).map(_ =>
+    path.join(root, packages[_].location)
+  );
+} else {
+  includedSources = paths.appSrc;
+}
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -408,9 +416,7 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: Object.keys(packages).map(_ =>
-                path.join(root, packages[_].location)
-              ),
+              include: includedSources,
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
