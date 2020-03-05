@@ -62,11 +62,14 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 let includedSources;
 if (root) {
+  const vrs = spawn.sync('yarn', ['-v']);
   const pgks = spawn.sync('yarn', ['workspaces', 'info', '--json']);
-  const output = JSON.parse(pgks.output[1].toString());
-  const packages = JSON.parse(output.data);
-  includedSources = Object.keys(packages).map(_ =>
-    path.join(root, packages[_].location)
+  const output = JSON.parse(pgks.output[1].toString())
+  const version = vrs.output[1].toString();
+  const packages = version < "1.22.0" ? JSON.parse(output.data) : output;
+
+  includedSources = Object.values(packages).map(val =>
+    path.join(root, val.location)
   );
 } else {
   includedSources = paths.appSrc;
