@@ -1,6 +1,6 @@
 {
   "name": "@nosplatform/react-scripts",
-  "version": "3.4.1-nosplatform.0",
+  "version": "4.0.0-nosplatform.1",
   "description": "nOS Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
